@@ -34,7 +34,7 @@
     <link rel="stylesheet" href="app.css">
     <script type="text/javascript" src="app.js"></script>
   </head>
-  <body>
+  <body onload="load()">
     <span id="mode"></span>
     <div class="wrapper">
       <div class="buttons">
@@ -43,7 +43,7 @@
         <button id="clear" onclick="clear()">Clear</button>
       </div>
       <canvas id="chalkboard" height="700" width="700"
-              onmousedown="startTrace()" onmouseup="endTrace()" onmousemove="trace(event)"></canvas>
+              onmousedown="setTrace(true)" onmouseup="setTrace(false)" onmousemove="trace(event)"></canvas>
     </div>
   </body>
 </html>

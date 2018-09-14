@@ -1,7 +1,7 @@
 var chalkboard = null;
 var context = null;
 var client = null;
-var tracing = false;
+var isTracing = false;
 var mode = "chalk";
 
 const chalkStyle = "white";
@@ -13,32 +13,35 @@ function load() {
     client = chalkboard.getBoundingClientRect();
 }
 
-function startTrace() {
-    tracing = true;
+function changeMode(newMode) {
+    mode = newMode;
 }
 
-function endTrace() {
-    tracing = false;
+function setTrace(newTrace) {
+    isTracing = newTrace;
 }
 
 function trace(event) {
-    if (!tracing) {
+    if (!isTracing) {
         return;
     }
 
+    var radius = 0;
     switch(mode) {
         case "brush":
             context.fillStyle = brushStyle;
+            radius = 30;
             break;
         default:
             context.fillStyle = chalkStyle;
+            radius = 2;
     }
 
     const mouseX = event.clientX - client.left;
     const mouseY = event.clientY - client.top;
 
     context.beginPath();
-    context.arc(mouseX, mouseY, 3, 0, 2*Math.PI);
+    context.arc(mouseX, mouseY, radius, 0, 2*Math.PI);
     context.fill();
     context.stroke();
     context.closePath();

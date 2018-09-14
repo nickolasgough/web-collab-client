@@ -1,27 +1,33 @@
 var chalkboard = null;
 var context = null;
 var client = null;
+var modeSpan = null;
+
 var isTracing = false;
 var mode = "chalk";
 
 const chalkStyle = "white";
 const brushStyle = "black";
 
-function load() {
+function initialLoad() {
     chalkboard = document.getElementById("chalkboard");
     context = chalkboard.getContext("2d");
     client = chalkboard.getBoundingClientRect();
+
+    modeSpan = document.getElementById("mode");
+    modeSpan.innerHTML = mode;
 }
 
 function changeMode(newMode) {
     mode = newMode;
+    modeSpan.innerHTML = mode;
 }
 
 function setTrace(newTrace) {
     isTracing = newTrace;
 }
 
-function trace(event) {
+function traceBoard(event) {
     if (!isTracing) {
         return;
     }
@@ -34,7 +40,7 @@ function trace(event) {
             break;
         default:
             context.fillStyle = chalkStyle;
-            radius = 2;
+            radius = 3;
     }
 
     const mouseX = event.clientX - client.left;
@@ -47,9 +53,9 @@ function trace(event) {
     context.closePath();
 }
 
-function clear() {
+function clearBoard() {
     const fillStyle = context.fillStyle;
     context.fillStyle = brushStyle;
-    context.fillRect(0, 0, chalkboard.height, chalkboard.width);
+    context.fillRect(0, 0, chalkboard.width, chalkboard.height);
     context.fillStyle = fillStyle;
 }

@@ -26,3 +26,31 @@
 [debug] [2018-09-14T20:12:34.780Z] <<< HTTP RESPONSE 200
 [info] i  hosting[web-collab-database]: Serving hosting files from: public
 [info] ✔  hosting[web-collab-database]: Local server: http://localhost:5000
+[debug] [2018-09-14T22:59:37.229Z] ----------------------------------------------------------------------
+[debug] [2018-09-14T22:59:37.231Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-09-14T22:59:37.231Z] CLI Version:   4.2.1
+[debug] [2018-09-14T22:59:37.231Z] Platform:      darwin
+[debug] [2018-09-14T22:59:37.231Z] Node Version:  v8.10.0
+[debug] [2018-09-14T22:59:37.232Z] Time:          Fri Sep 14 2018 16:59:37 GMT-0600 (CST)
+[debug] [2018-09-14T22:59:37.232Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-14T22:59:37.245Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-14T22:59:37.245Z] > authorizing via signed-in user
+[debug] [2018-09-14T22:59:37.247Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-09-14T22:59:37.248Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+
+[debug] [2018-09-14T22:59:37.648Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-14T22:59:37.662Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/web-collab-database  
+ 
+[debug] [2018-09-14T22:59:38.205Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-14T22:59:38.207Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/web-collab-database  
+ 
+[debug] [2018-09-14T22:59:38.784Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/nickolas-gough/Desktop/cmpt400/project/web-collab-client'...
+[info] 
+[debug] [2018-09-14T22:59:38.786Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/207056332601/clients/_:getWebAppConfig  
+ 
+[debug] [2018-09-14T22:59:39.249Z] <<< HTTP RESPONSE 200
+[info] i  hosting[web-collab-database]: Serving hosting files from: public
+[info] ✔  hosting[web-collab-database]: Local server: http://localhost:5000

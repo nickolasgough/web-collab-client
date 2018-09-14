@@ -1,0 +1,28 @@
+[debug] [2018-09-14T20:12:32.925Z] ----------------------------------------------------------------------
+[debug] [2018-09-14T20:12:32.927Z] Command:       /usr/local/bin/node /usr/local/bin/firebase serve
+[debug] [2018-09-14T20:12:32.927Z] CLI Version:   4.2.1
+[debug] [2018-09-14T20:12:32.927Z] Platform:      darwin
+[debug] [2018-09-14T20:12:32.927Z] Node Version:  v8.10.0
+[debug] [2018-09-14T20:12:32.928Z] Time:          Fri Sep 14 2018 14:12:32 GMT-0600 (CST)
+[debug] [2018-09-14T20:12:32.928Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2018-09-14T20:12:32.936Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2018-09-14T20:12:32.936Z] > authorizing via signed-in user
+[debug] [2018-09-14T20:12:32.937Z] > refreshing access token with scopes: ["email","https://www.googleapis.com/auth/cloud-platform","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","openid"]
+[debug] [2018-09-14T20:12:32.938Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+
+[debug] [2018-09-14T20:12:33.297Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-14T20:12:33.307Z] >>> HTTP REQUEST GET https://admin.firebase.com/v1/projects/web-collab-database  
+ 
+[debug] [2018-09-14T20:12:33.600Z] <<< HTTP RESPONSE 200
+[debug] [2018-09-14T20:12:33.601Z] >>> HTTP REQUEST GET https://cloudresourcemanager.googleapis.com/v1/projects/web-collab-database  
+ 
+[debug] [2018-09-14T20:12:34.153Z] <<< HTTP RESPONSE 200
+[info] 
+[info] === Serving from '/Users/nickolas-gough/Desktop/cmpt400/project/web-collab-client'...
+[info] 
+[debug] [2018-09-14T20:12:34.156Z] >>> HTTP REQUEST GET https://mobilesdk-pa.googleapis.com/v1/projects/207056332601/clients/_:getWebAppConfig  
+ 
+[debug] [2018-09-14T20:12:34.780Z] <<< HTTP RESPONSE 200
+[info] i  hosting[web-collab-database]: Serving hosting files from: public
+[info] ✔  hosting[web-collab-database]: Local server: http://localhost:5000

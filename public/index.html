@@ -35,6 +35,15 @@
     <script type="text/javascript" src="app.js"></script>
   </head>
   <body>
-    <canvas id="chalkboard" onclick="trace()"></canvas>
+    <span id="mode"></span>
+    <div class="wrapper">
+      <div class="buttons">
+        <button id="chalk" onclick="changeMode('chalk')">Chalk</button>
+        <button id="brush" onclick="changeMode('brush')">Brush</button>
+        <button id="clear" onclick="clear()">Clear</button>
+      </div>
+      <canvas id="chalkboard" height="700" width="700"
+              onmousedown="startTrace()" onmouseup="endTrace()" onmousemove="trace(event)"></canvas>
+    </div>
   </body>
 </html>

@@ -4,9 +4,17 @@ body {
     display: flex;
 }
 
-#chalkboard {
-    height: 500px;
-    width: 500px;
+.wrapper {
+    display: flex;
     margin: auto;
+}
+
+.buttons {
+    display: flex;
+    margin: auto;
+    flex-flow: column;
+}
+
+#chalkboard {
     background-color: black;
 }

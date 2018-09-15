@@ -3,11 +3,15 @@ var context = null;
 var client = null;
 var modeSpan = null;
 
+var firestore = null;
+
 var isTracing = false;
 var mode = "chalk";
 
 const chalkStyle = "white";
+const chalkRadius = 3;
 const brushStyle = "black";
+const brushRadius = 30;
 
 function initialLoad() {
     chalkboard = document.getElementById("chalkboard");
@@ -16,6 +20,18 @@ function initialLoad() {
 
     modeSpan = document.getElementById("mode");
     modeSpan.innerHTML = mode;
+
+    firestore = firebase.firestore();
+    firestore.collection("chalkboard").get().then(
+        function(chalkboardSnapshot) {
+            chalkboardSnapshot.forEach(
+                function(chalk) {
+                    const data = chalk.data();
+                    drawChalk(data.x, data.y, data.colour, chalkRadius);
+                }
+            );
+        }
+    );
 }
 
 function changeMode(newMode) {
@@ -36,21 +52,26 @@ function traceBoard(event) {
     switch(mode) {
         case "brush":
             context.fillStyle = brushStyle;
-            radius = 30;
+            radius = brushRadius;
             break;
         default:
             context.fillStyle = chalkStyle;
-            radius = 3;
+            radius = chalkRadius;
     }
-
     const mouseX = event.clientX - client.left;
     const mouseY = event.clientY - client.top;
+    drawChalk(mouseX, mouseY, context.fillStyle, radius);
+}
 
+function drawChalk(x, y, colour, radius) {
+    const fillStyle = context.fillStyle;
+    context.fillStyle = colour;
     context.beginPath();
-    context.arc(mouseX, mouseY, radius, 0, 2*Math.PI);
+    context.arc(x, y, radius, 0, 2*Math.PI);
     context.fill();
     context.stroke();
     context.closePath();
+    context.fillStyle = fillStyle;
 }
 
 function clearBoard() {

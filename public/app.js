@@ -4,39 +4,33 @@ var client = null;
 var modeSpan = null;
 
 var firestore = null;
+var chalkIds = [];
+var nextId = 0;
 
 var isTracing = false;
-var mode = "chalk";
 
 const chalkStyle = "white";
+const boardStyle = "black";
 const chalkRadius = 3;
-const brushStyle = "black";
-const brushRadius = 30;
 
 function initialLoad() {
     chalkboard = document.getElementById("chalkboard");
     context = chalkboard.getContext("2d");
     client = chalkboard.getBoundingClientRect();
 
-    modeSpan = document.getElementById("mode");
-    modeSpan.innerHTML = mode;
-
     firestore = firebase.firestore();
-    firestore.collection("chalkboard").get().then(
+    firestore.collection("chalkboard").where("deleted", "==", false).onSnapshot(
         function(chalkboardSnapshot) {
             chalkboardSnapshot.forEach(
                 function(chalk) {
+                    chalkIds.push(chalk.id);
                     const data = chalk.data();
-                    drawChalk(data.x, data.y, data.colour, chalkRadius);
+                    drawChalk(data.x, data.y, data.colour);
+                    nextId += 1;
                 }
             );
         }
     );
-}
-
-function changeMode(newMode) {
-    mode = newMode;
-    modeSpan.innerHTML = mode;
 }
 
 function setTrace(newTrace) {
@@ -48,26 +42,22 @@ function traceBoard(event) {
         return;
     }
 
-    var radius = 0;
-    switch(mode) {
-        case "brush":
-            context.fillStyle = brushStyle;
-            radius = brushRadius;
-            break;
-        default:
-            context.fillStyle = chalkStyle;
-            radius = chalkRadius;
-    }
     const mouseX = event.clientX - client.left;
     const mouseY = event.clientY - client.top;
-    drawChalk(mouseX, mouseY, context.fillStyle, radius);
+    uploadChalk(mouseX, mouseY, chalkStyle);
 }
 
-function drawChalk(x, y, colour, radius) {
+function uploadChalk(x, y, colour) {
+    const chalk = {x: x, y: y, colour: colour, deleted: false};
+    firestore.collection("chalkboard").doc(`chalk-${nextId}`).set(chalk);
+    nextId += 1;
+}
+
+function drawChalk(x, y, colour) {
     const fillStyle = context.fillStyle;
     context.fillStyle = colour;
     context.beginPath();
-    context.arc(x, y, radius, 0, 2*Math.PI);
+    context.arc(x, y, chalkRadius, 0, 2*Math.PI);
     context.fill();
     context.stroke();
     context.closePath();
@@ -76,7 +66,16 @@ function drawChalk(x, y, colour, radius) {
 
 function clearBoard() {
     const fillStyle = context.fillStyle;
-    context.fillStyle = brushStyle;
+    context.fillStyle = boardStyle;
     context.fillRect(0, 0, chalkboard.width, chalkboard.height);
     context.fillStyle = fillStyle;
+
+    chalkIds.forEach(
+        function(chalkId) {
+            firestore.collection("chalkboard").doc(chalkId).update(
+                {deleted: true}
+            );
+        }
+    );
+    chalkIds = [];
 }

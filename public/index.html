@@ -36,11 +36,7 @@
   <body onload="initialLoad()">
     <div class="wrapper">
       <div class="buttons">
-        <button id="chalk" class="button" onclick="changeMode('chalk')">Chalk</button>
-        <button id="brush" class="button" onclick="changeMode('brush')">Brush</button>
         <button id="clear" class="button" onclick="clearBoard()">Clear</button>
-
-        <span id="mode" class="button"></span>
       </div>
       <canvas id="chalkboard" height="700" width="700"
               onmousedown="setTrace(true)" onmouseup="setTrace(false)" onmousemove="traceBoard(event)"></canvas>

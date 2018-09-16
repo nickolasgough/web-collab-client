@@ -34,12 +34,18 @@
     <script type="text/javascript" src="app.js"></script>
   </head>
   <body onload="initialLoad()">
-    <div class="wrapper">
-      <div class="buttons">
-        <button id="clear" class="button" onclick="clearBoard()">Clear</button>
+    <div class="container">
+      <div class="login">
+        User: <input id="user" type="text">
+        <button id="submit" onclick="login()">Login</button>
       </div>
-      <canvas id="chalkboard" height="700" width="700"
-              onmousedown="setTrace(true)" onmouseup="setTrace(false)" onmousemove="traceBoard(event)"></canvas>
+      <div class="wrapper">
+        <div class="buttons">
+          <button id="clear" class="button" onclick="clearBoard()">Clear</button>
+        </div>
+        <canvas id="chalkboard" height="700" width="700"
+                onmousedown="setTrace(true, event)" onmouseup="setTrace(false, event)" onmousemove="traceBoard(event)"></canvas>
+      </div>
     </div>
   </body>
 </html>

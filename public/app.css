@@ -2,23 +2,26 @@ body {
     height: 100vh;
     width: 100vw;
     display: flex;
+    flex-flow: column;
+    justify-content: center;
 }
 
 .container {
     width: 100%;
     height: 100%;
     display: flex;
+    margin: auto;
     flex-flow: column;
 }
 
 .login {
-    padding: 20px;
-    margin: auto;
+    padding: 10px;
+    margin: 0 auto;
 }
 
 .wrapper {
     display: flex;
-    margin: auto;
+    margin: 0 auto;
 }
 
 .buttons {

@@ -10,7 +10,7 @@ var nextId = 0;
 
 var isTracing = false;
 
-const chalkStyle = "white";
+var chalkStyle = "white";
 const boardStyle = "black";
 
 function initialLoad() {
@@ -35,7 +35,8 @@ function initialLoad() {
 
 function login() {
     user = document.getElementById("user").value;
-    firestore.collection("users").doc(user).set({user: user}, {merge: true});
+    chalkStyle = document.getElementById("colour").value;
+    firestore.collection("users").doc(user).set({user: user, colour: chalkStyle}, {merge: true});
 
     firestore.collection("chalkboard").where("deleted", "==", false).onSnapshot(
         function(chalkboardSnapshot) {
@@ -43,7 +44,9 @@ function login() {
                 function(chalk) {
                     chalkIds.push(chalk.id);
                     const data = chalk.data();
-                    drawChalk(data.points, data.colour);
+                    if (data.user !== user) {
+                        drawChalk(data.points, data.colour);
+                    }
                     nextId += 1;
                 }
             );
@@ -72,12 +75,14 @@ function traceBoard(event) {
     const mouseY = event.clientY - client.top;
     currentPoints.push({x: mouseX, y: mouseY});
     const count = currentPoints.length;
-    drawLine(currentPoints[count-2], currentPoints[count-1]);
+    drawLine(currentPoints[count-2], currentPoints[count-1], chalkStyle);
 }
 
 function uploadChalk(points, colour) {
+    const chalkId = `chalk-${nextId}`;
     const chalk = {points: points, colour: colour, user: user, deleted: false};
-    firestore.collection("chalkboard").doc(`chalk-${nextId}`).set(chalk);
+    firestore.collection("chalkboard").doc(chalkId).set(chalk);
+    chalkIds.push(chalkId);
     nextId += 1;
 }
 
@@ -98,8 +103,6 @@ function drawLine(source, destination, colour) {
     const strokeStyle = context.strokeStyle;
     context.strokeStyle = colour;
 
-    console.log(source);
-    console.log(destination);
     context.beginPath();
     context.moveTo(source.x, source.y);
     context.lineTo(destination.x, destination.y);
@@ -117,9 +120,7 @@ function clearBoard() {
 
     chalkIds.forEach(
         function(chalkId) {
-            firestore.collection("chalkboard").doc(chalkId).update(
-                {deleted: true}
-            );
+            firestore.collection("chalkboard").doc(chalkId).delete();
         }
     );
     chalkIds = [];

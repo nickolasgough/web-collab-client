@@ -42,7 +42,7 @@
       </div>
       <div class="wrapper">
         <div class="buttons">
-          <button id="clear" class="button" onclick="clearBoard()">Clear</button>
+          <button id="clear" class="button" onclick="removeBoard()">Clear</button>
         </div>
         <canvas id="chalkboard" height="700" width="700"
                 onmousedown="setTrace(true, event)" onmouseup="setTrace(false, event)" onmousemove="traceBoard(event)"></canvas>

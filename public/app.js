@@ -10,7 +10,7 @@ var nextId = 0;
 
 var isTracing = false;
 
-var chalkStyle = "white";
+var chalkStyle = null;
 const boardStyle = "black";
 
 function initialLoad() {
@@ -19,8 +19,10 @@ function initialLoad() {
     client = chalkboard.getBoundingClientRect();
 
     firestore = firebase.firestore();
-    firestore.collection("chalkboard").where("deleted", "==", false).get().then(
+    firestore.collection("chalkboard").where("deleted", "==", false).onSnapshot(
         function(chalkboardSnapshot) {
+            clearBoard();
+            chalkIds = [];
             chalkboardSnapshot.forEach(
                 function(chalk) {
                     chalkIds.push(chalk.id);
@@ -37,24 +39,14 @@ function login() {
     user = document.getElementById("user").value;
     chalkStyle = document.getElementById("colour").value;
     firestore.collection("users").doc(user).set({user: user, colour: chalkStyle}, {merge: true});
-
-    firestore.collection("chalkboard").where("deleted", "==", false).onSnapshot(
-        function(chalkboardSnapshot) {
-            chalkboardSnapshot.forEach(
-                function(chalk) {
-                    chalkIds.push(chalk.id);
-                    const data = chalk.data();
-                    if (data.user !== user) {
-                        drawChalk(data.points, data.colour);
-                    }
-                    nextId += 1;
-                }
-            );
-        }
-    );
 }
 
 function setTrace(newTrace, event) {
+    if (!user || !chalkStyle) {
+        window.alert("Please enter a username and colour to begin drawing.");
+        return;
+    }
+
     isTracing = newTrace;
     if (isTracing) {
         const mouseX = event.clientX - client.left;
@@ -117,6 +109,10 @@ function clearBoard() {
     context.fillStyle = boardStyle;
     context.fillRect(0, 0, chalkboard.width, chalkboard.height);
     context.fillStyle = fillStyle;
+}
+
+function removeBoard() {
+    clearBoard();
 
     chalkIds.forEach(
         function(chalkId) {

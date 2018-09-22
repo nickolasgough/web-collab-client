@@ -43,3 +43,11 @@ body {
 #chalkboard {
     background-color: black;
 }
+
+.pointer {
+    width: 10px;
+    height: 10px;
+    position: fixed;
+    border: solid black 1px;
+    border-radius: 50%;
+}

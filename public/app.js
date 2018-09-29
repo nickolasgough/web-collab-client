@@ -20,18 +20,27 @@ function initialLoad() {
     firestore = firebase.firestore();
     firestore.collection("chalkboard").where("deleted", "==", false).onSnapshot(
         function (chalkboardSnapshot) {
-            chalkboardSnapshot.docChanges().forEach(
+            // chalkboardSnapshot.docChanges().forEach(
+            //     function (change) {
+            //         var data = change.doc.data();
+            //         chalkIds.push(change.doc.id);
+            //         var docId = parseInt(change.doc.id.split("-")[1]);
+            //         nextId = docId > nextId ? docId : nextId;
+            //         if (change.type === "added" || change.type === "modified") {
+            //             drawChalk(data.points, data.colour);
+            //         }
+            //         if (change.type === "removed") {
+            //             drawChalk(data.points, boardStyle);
+            //         }
+            //     }
+            // );
+            chalkboardSnapshot.forEach(
                 function (change) {
-                    var data = change.doc.data();
-                    chalkIds.push(change.doc.id);
-                    var docId = parseInt(change.doc.id.split("-")[1]);
+                    var data = change.data();
+                    chalkIds.push(change.id);
+                    var docId = parseInt(change.id.split("-")[1]);
                     nextId = docId > nextId ? docId : nextId;
-                    if (change.type === "added" || change.type === "modified") {
-                        drawChalk(data.points, data.colour);
-                    }
-                    if (change.type === "removed") {
-                        drawChalk(data.points, boardStyle);
-                    }
+                    drawChalk(data.points, data.colour);
                 }
             );
         }
@@ -45,18 +54,24 @@ function login() {
 
     firestore.collection("users").onSnapshot(
         function (usersSnapshot) {
-            usersSnapshot.docChanges().forEach(
+            // usersSnapshot.docChanges().forEach(
+            //     function (change) {
+            //         var data = change.doc.data();
+            //         if (change.type === "added") {
+            //             drawUser(data.user, data.position, data.colour);
+            //         }
+            //         if (change.type === "modified") {
+            //             drawUser(data.user, data.position, data.colour);
+            //         }
+            //         if (change.type === "removed") {
+            //             removeUser(data.user);
+            //         }
+            //     }
+            // );
+            usersSnapshot.forEach(
                 function (change) {
-                    var data = change.doc.data();
-                    if (change.type === "added") {
-                        drawUser(data.user, data.position, data.colour);
-                    }
-                    if (change.type === "modified") {
-                        drawUser(data.user, data.position, data.colour);
-                    }
-                    if (change.type === "removed") {
-                        removeUser(data.user);
-                    }
+                    var data = change.data();
+                    drawUser(data.user, data.position, data.colour);
                 }
             );
         }

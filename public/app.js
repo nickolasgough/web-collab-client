@@ -48,7 +48,6 @@ function login() {
             usersSnapshot.docChanges().forEach(
                 function (change) {
                     var data = change.doc.data();
-                    console.log(data);
                     if (change.type === "added") {
                         drawUser(data.user, data.position, data.colour);
                     }
@@ -81,12 +80,11 @@ function setTrace(newTrace, event) {
 }
 
 function traceBoard(event) {
+    if (user) {
+        const userData = {user: user, position: {x: event.clientX, y: event.clientY}, colour: chalkStyle};
+        firestore.collection("users").doc(user).set(userData, {merge: true});
+    }
     if (!isTracing) {
-        if (user) {
-            const userData = {user: user, position: {x: event.clientX, y: event.clientY}, colour: chalkStyle};
-            console.log("Uploaded user position");
-            firestore.collection("users").doc(user).set(userData, {merge: true});
-        }
         return;
     }
 
@@ -148,13 +146,13 @@ function removeBoard() {
 
 function drawUser(userId, position, colour) {
     var userPointer = document.getElementById(userId);
-    if (userPointer == null) {
+    if (!userPointer) {
         userPointer = document.createElement("div");
         userPointer.id = userId;
         userPointer.classList.add("pointer");
         userPointer.style.backgroundColor = "white";
+        document.body.appendChild(userPointer);
     }
-    userPointer.clientX = position.x;
-    userPointer.clientY = position.y;
-    console.log(userPointer);
+    userPointer.style.left = `${position.x}px`;
+    userPointer.style.top = `${position.y}px`;
 }

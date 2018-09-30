@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="ffb537c1-2645-44d0-a208-88e39ca3974b" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.firebase/hosting.cHVibGlj.cache" afterPath="$PROJECT_DIR$/.firebase/hosting.cHVibGlj.cache" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/public/app.js" afterPath="$PROJECT_DIR$/public/app.js" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -31,8 +29,8 @@
       <file leaf-file-name="app.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/public/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="233">
-              <caret line="157" column="9" lean-forward="true" selection-start-line="157" selection-start-column="9" selection-end-line="157" selection-end-column="9" />
+            <state relative-caret-position="218">
+              <caret line="156" column="82" lean-forward="true" selection-start-line="156" selection-start-column="82" selection-end-line="156" selection-end-column="82" />
               <folding>
                 <marker date="1538337177835" expanded="true" signature="0:4650" ph="//..." />
               </folding>
@@ -191,12 +189,12 @@
       <workItem from="1537582994384" duration="4932000" />
       <workItem from="1538184450279" duration="2031000" />
       <workItem from="1538269223813" duration="32000" />
-      <workItem from="1538334436546" duration="2147000" />
+      <workItem from="1538334436546" duration="2231000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="27358000" />
+    <option name="totallyTimeSpent" value="27442000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="47" y="23" width="1393" height="877" extended-state="6" />
@@ -654,8 +652,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/public/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="233">
-          <caret line="157" column="9" lean-forward="true" selection-start-line="157" selection-start-column="9" selection-end-line="157" selection-end-column="9" />
+        <state relative-caret-position="218">
+          <caret line="156" column="82" lean-forward="true" selection-start-line="156" selection-start-column="82" selection-end-line="156" selection-end-column="82" />
           <folding>
             <marker date="1538337177835" expanded="true" signature="0:4650" ph="//..." />
           </folding>

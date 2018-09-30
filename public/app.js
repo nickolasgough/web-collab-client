@@ -153,8 +153,8 @@ function clearBoard() {
 function removeBoard() {
     chalkIds.forEach(
         function(chalkId) {
-            // chalkBoardCollection.doc(chalkId).delete();
-            chalkBoardCollection.doc(chalkId).set({deleted: true}, {merge: true});
+            chalkBoardCollection.doc(chalkId).delete();
+            // chalkBoardCollection.doc(chalkId).set({deleted: true}, {merge: true});
         }
     );
     chalkIds = [];

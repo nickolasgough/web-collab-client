@@ -6,27 +6,29 @@ var currentPoints = [];
 var firestore = null;
 var user;
 var chalkIds = [];
-var nextId = 0;
 
 var isTracing = false;
 
 var chalkStyle = null;
 const boardStyle = "black";
 
+var chalkBoardCollection = null;
+var userCollection = null;
+
 function initialLoad() {
     chalkboard = document.getElementById("chalkboard");
     context = chalkboard.getContext("2d");
 
     firestore = firebase.firestore();
-    firestore.collection("chalkboard").where("deleted", "==", false).onSnapshot(
+    chalkBoardCollection = firestore.collection("chalkboard");
+
+    chalkBoardCollection.where("deleted", "==", false).onSnapshot(
         function (chalkboardSnapshot) {
             clearBoard();
             // chalkboardSnapshot.docChanges().forEach(
             //     function (change) {
             //         var data = change.doc.data();
             //         chalkIds.push(change.doc.id);
-            //         var docId = parseInt(change.doc.id.split("-")[1]);
-            //         nextId = docId > nextId ? docId : nextId;
             //         if (change.type === "added" || change.type === "modified") {
             //             drawChalk(data.points, data.colour);
             //         }
@@ -39,8 +41,6 @@ function initialLoad() {
                 function (change) {
                     var data = change.data();
                     chalkIds.push(change.id);
-                    var docId = parseInt(change.id.split("-")[1]);
-                    nextId = docId > nextId ? docId : nextId;
                     drawChalk(data.points, data.colour);
                 }
             );
@@ -51,9 +51,11 @@ function initialLoad() {
 function login() {
     user = document.getElementById("user").value;
     chalkStyle = document.getElementById("colour").value;
-    firestore.collection("users").doc(user).set({user: user, colour: chalkStyle}, {merge: true});
+    const position = {x: 0, y: 0};
+    userCollection = firestore.collection("users");
+    userCollection.doc(user).set({user: user, colour: chalkStyle, position: position}, {merge: true});
 
-    firestore.collection("users").onSnapshot(
+    userCollection.onSnapshot(
         function (usersSnapshot) {
             // usersSnapshot.docChanges().forEach(
             //     function (change) {
@@ -91,14 +93,13 @@ function setTrace(newTrace, event) {
     const mouseY = event.clientY - client.top;
     currentPoints.push({x: mouseX, y: mouseY});
 
-    nextId = !isTracing ? nextId + 1 : nextId;
     currentPoints = !isTracing ? [] : currentPoints;
 }
 
 function traceBoard(event) {
     if (user) {
         const userData = {user: user, position: {x: event.clientX, y: event.clientY}, colour: chalkStyle};
-        firestore.collection("users").doc(user).set(userData, {merge: true});
+        userCollection.doc(user).set(userData, {merge: true});
     }
     if (!isTracing) {
         return;
@@ -112,9 +113,8 @@ function traceBoard(event) {
 }
 
 function uploadChalk(points, colour) {
-    const chalkId = `chalk-${nextId}`;
     const chalk = {points: points, colour: colour, user: user, deleted: false};
-    firestore.collection("chalkboard").doc(chalkId).set(chalk, {merge: true});
+    chalkBoardCollection.doc().set(chalk, {merge: true});
 }
 
 function drawChalk(points, colour) {
@@ -153,11 +153,11 @@ function clearBoard() {
 function removeBoard() {
     chalkIds.forEach(
         function(chalkId) {
-            firestore.collection("chalkboard").doc(chalkId).delete();
+            // chalkBoardCollection.doc(chalkId).delete();
+            chalkBoardCollection.doc(chalkId).set({deleted: true}, {merge: true});
         }
     );
     chalkIds = [];
-    nextId = 0;
 }
 
 function drawUser(userId, position, colour) {

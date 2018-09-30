@@ -20,6 +20,7 @@ function initialLoad() {
     firestore = firebase.firestore();
     firestore.collection("chalkboard").where("deleted", "==", false).onSnapshot(
         function (chalkboardSnapshot) {
+            clearBoard();
             // chalkboardSnapshot.docChanges().forEach(
             //     function (change) {
             //         var data = change.doc.data();

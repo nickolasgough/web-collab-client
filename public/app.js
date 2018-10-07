@@ -1,10 +1,15 @@
+// Global variables
+
 var chalkboard = null;
 var context = null;
 var client = null;
 var currentPoints = [];
 
 var firestore = null;
+var database = null;
+
 var user;
+var chalkId = 0;
 var chalkIds = [];
 
 var isTracing = false;
@@ -15,70 +20,25 @@ const boardStyle = "black";
 var chalkBoardCollection = null;
 var userCollection = null;
 
+// Application functions
+
 function initialLoad() {
     chalkboard = document.getElementById("chalkboard");
     context = chalkboard.getContext("2d");
 
-    firestore = firebase.firestore();
-    chalkBoardCollection = firestore.collection("chalkboard");
+    // firestore = firebase.firestore();
+    database = firebase.database();
 
-    chalkBoardCollection.where("deleted", "==", false).onSnapshot(
-        function (chalkboardSnapshot) {
-            clearBoard();
-            // chalkboardSnapshot.docChanges().forEach(
-            //     function (change) {
-            //         var data = change.doc.data();
-            //         chalkIds.push(change.doc.id);
-            //         if (change.type === "added" || change.type === "modified") {
-            //             drawChalk(data.points, data.colour);
-            //         }
-            //         if (change.type === "removed") {
-            //             drawChalk(data.points, boardStyle);
-            //         }
-            //     }
-            // );
-            chalkboardSnapshot.forEach(
-                function (change) {
-                    var data = change.data();
-                    chalkIds.push(change.id);
-                    drawChalk(data.points, data.colour);
-                }
-            );
-        }
-    );
+    // firestoreChalkboardListener();
+    databaseChalkboardListener();
 }
 
 function login() {
     user = document.getElementById("user").value;
     chalkStyle = document.getElementById("colour").value;
-    const position = {x: 0, y: 0};
-    userCollection = firestore.collection("users");
-    userCollection.doc(user).set({user: user, colour: chalkStyle, position: position}, {merge: true});
 
-    userCollection.onSnapshot(
-        function (usersSnapshot) {
-            // usersSnapshot.docChanges().forEach(
-            //     function (change) {
-            //         var data = change.doc.data();
-            //         if (change.type === "added") {
-            //             drawUser(data.user, data.position, data.colour);
-            //         }
-            //         if (change.type === "modified") {
-            //             drawUser(data.user, data.position, data.colour);
-            //         }
-            //         if (change.type === "removed") {
-            //             removeUser(data.user);
-            //         }
-            //     }
-            // );
-            usersSnapshot.forEach(
-                function (change) {
-                    var data = change.data();
-                    drawUser(data.user, data.position, data.colour);
-                }
-            );
-        }
-    );
+    // firestoreUserListener();
+    databaseUserListener();
 }
 
 function setTrace(newTrace, event) {
@@ -93,13 +53,16 @@ function setTrace(newTrace, event) {
     const mouseY = event.clientY - client.top;
     currentPoints.push({x: mouseX, y: mouseY});
 
-    currentPoints = !isTracing ? [] : currentPoints;
+    if (!isTracing) {
+        chalkId += 1;
+        currentPoints = [];
+    }
 }
 
 function traceBoard(event) {
     if (user) {
-        const userData = {user: user, position: {x: event.clientX, y: event.clientY}, colour: chalkStyle};
-        userCollection.doc(user).set(userData, {merge: true});
+        // firestoreUploadUser(user, event.clientX, event.clientY);
+        databaseUploadUser(user, event.clientX, event.clientY);
     }
     if (!isTracing) {
         return;
@@ -109,12 +72,9 @@ function traceBoard(event) {
     const mouseX = event.clientX - client.left;
     const mouseY = event.clientY - client.top;
     currentPoints.push({x: mouseX, y: mouseY});
-    uploadChalk(currentPoints, chalkStyle);
-}
 
-function uploadChalk(points, colour) {
-    const chalk = {points: points, colour: colour, user: user, deleted: false};
-    chalkBoardCollection.doc().set(chalk, {merge: true});
+    // firestoreUploadChalk(currentPoints, chalkStyle);
+    databaseUploadChalk(currentPoints, chalkStyle);
 }
 
 function drawChalk(points, colour) {
@@ -150,16 +110,6 @@ function clearBoard() {
     context.fillStyle = fillStyle;
 }
 
-function removeBoard() {
-    chalkIds.forEach(
-        function(chalkId) {
-            chalkBoardCollection.doc(chalkId).delete();
-            // chalkBoardCollection.doc(chalkId).set({deleted: true}, {merge: true});
-        }
-    );
-    chalkIds = [];
-}
-
 function drawUser(userId, position, colour) {
     var userPointer = document.getElementById(userId);
     if (!userPointer) {
@@ -171,4 +121,107 @@ function drawUser(userId, position, colour) {
     }
     userPointer.style.left = `${position.x}px`;
     userPointer.style.top = `${position.y}px`;
+}
+
+function removeBoard() {
+    // firestoreRemoveBoard();
+    databaseRemoveBoard();
+}
+
+// Database functions
+
+function firestoreChalkboardListener() {
+    chalkBoardCollection = firestore.collection("chalkboard");
+
+    chalkBoardCollection.where("deleted", "==", false).onSnapshot(
+        function (snapshot) {
+            clearBoard();
+            snapshot.forEach(
+                function (change) {
+                    var data = change.data();
+                    chalkIds.push(change.id);
+                    drawChalk(data.points, data.colour);
+                }
+            );
+        }
+    );
+}
+
+function firestoreUploadChalk(points, colour) {
+    const chalk = {points: points, colour: colour, user: user, deleted: false};
+    chalkBoardCollection.doc().set(chalk, {merge: true});
+}
+
+function firestoreUserListener() {
+    const position = {x: 0, y: 0};
+    userCollection = firestore.collection("users");
+    userCollection.doc(user).set({user: user, colour: chalkStyle, position: position}, {merge: true});
+
+    userCollection.onSnapshot(
+        function (snapshot) {
+            snapshot.forEach(
+                function (change) {
+                    var data = change.data();
+                    drawUser(data.user, data.position, data.colour);
+                }
+            );
+        }
+    );
+}
+
+function firestoreUploadUser(user, x, y) {
+    const userData = {user: user, position: {x: x, y: y}, colour: chalkStyle};
+    userCollection.doc(user).set(userData, {merge: true});
+}
+
+function firestoreRemoveBoard() {
+    chalkIds.forEach(
+        function(chalkId) {
+            chalkBoardCollection.doc(chalkId).delete();
+        }
+    );
+    chalkIds = [];
+}
+
+function databaseChalkboardListener() {
+    database.ref("chalkboard").on(
+        "value", function (snapshot) {
+            clearBoard();
+            var data = snapshot.val();
+            for (var key in data) {
+                chalkIds.push(key);
+                drawChalk(data[key].points, data[key].colour);
+            }
+        }
+    );
+}
+
+function databaseUploadChalk(points, colour) {
+    const chalk = {points: points, colour: colour};
+    database.ref("chalkboard/" + user + "-" + chalkId).set(chalk);
+}
+
+function databaseUserListener() {
+    const position = {x: 0, y: 0};
+    database.ref("users/" + user).set({user: user, colour: chalkStyle, position: position});
+
+    database.ref("users").on(
+        "value", function (snapshot) {
+            var data = snapshot.val();
+            for (var key in data) {
+                drawUser(key, data[key].position, data[key].colour);
+            }
+        }
+    );
+}
+
+function databaseUploadUser(user, x, y) {
+    const userData = {user: user, position: {x: x, y: y}, colour: chalkStyle};
+    database.ref("users/" + user).set(userData);
+}
+
+function databaseRemoveBoard() {
+    database.ref("chalkboard").remove();
+    chalkId = 0;
+    chalkIds = [];
 }

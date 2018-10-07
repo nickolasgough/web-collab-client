@@ -18,15 +18,24 @@
     <!--Custom work begins here-->
     <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
     <script>
-        // Initialize Firebase
+        // Initialize firestore
+        // var config = {
+        //     apiKey: "AIzaSyBWQTP95sySJKJlE6H4ReiXHJO9Zyekrhg",
+        //     authDomain: "web-collab-server.firebaseapp.com",
+        //     databaseURL: "https://web-collab-server.firebaseio.com",
+        //     projectId: "web-collab-server",
+        //     storageBucket: "web-collab-server.appspot.com",
+        //     messagingSenderId: "970460522785"
+        // };
+
+        // Initialize database
         var config = {
             apiKey: "AIzaSyBWQTP95sySJKJlE6H4ReiXHJO9Zyekrhg",
             authDomain: "web-collab-server.firebaseapp.com",
             databaseURL: "https://web-collab-server.firebaseio.com",
-            projectId: "web-collab-server",
-            storageBucket: "web-collab-server.appspot.com",
-            messagingSenderId: "970460522785"
+            storageBucket: "web-collab-server.appspot.com"
         };
+
         firebase.initializeApp(config);
     </script>
 

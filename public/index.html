@@ -1,61 +1,61 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Web Collab</title>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Web Collab</title>
 
-    <!--&lt;!&ndash; update the version number as needed &ndash;&gt;-->
-    <!--<script defer src="/__/firebase/5.5.0/firebase-app.js"></script>-->
-    <!--&lt;!&ndash; include only the Firebase features as you need &ndash;&gt;-->
-    <!--<script defer src="/__/firebase/5.5.0/firebase-auth.js"></script>-->
-    <!--<script defer src="/__/firebase/5.5.0/firebase-firestore.js"></script>-->
-    <!--<script defer src="/__/firebase/5.5.0/firebase-messaging.js"></script>-->
-    <!--<script defer src="/__/firebase/5.5.0/firebase-storage.js"></script>-->
-    <!--&lt;!&ndash; initialize the SDK after all desired features are loaded &ndash;&gt;-->
-    <!--<script defer src="/__/firebase/init.js"></script>-->
+  <!--&lt;!&ndash; update the version number as needed &ndash;&gt;-->
+  <!--<script defer src="/__/firebase/5.5.0/firebase-app.js"></script>-->
+  <!--&lt;!&ndash; include only the Firebase features as you need &ndash;&gt;-->
+  <!--<script defer src="/__/firebase/5.5.0/firebase-auth.js"></script>-->
+  <!--<script defer src="/__/firebase/5.5.0/firebase-firestore.js"></script>-->
+  <!--<script defer src="/__/firebase/5.5.0/firebase-messaging.js"></script>-->
+  <!--<script defer src="/__/firebase/5.5.0/firebase-storage.js"></script>-->
+  <!--&lt;!&ndash; initialize the SDK after all desired features are loaded &ndash;&gt;-->
+  <!--<script defer src="/__/firebase/init.js"></script>-->
 
-    <!--Custom work begins here-->
-    <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
-    <script>
-        // Initialize firestore
-        // var config = {
-        //     apiKey: "AIzaSyBWQTP95sySJKJlE6H4ReiXHJO9Zyekrhg",
-        //     authDomain: "web-collab-server.firebaseapp.com",
-        //     databaseURL: "https://web-collab-server.firebaseio.com",
-        //     projectId: "web-collab-server",
-        //     storageBucket: "web-collab-server.appspot.com",
-        //     messagingSenderId: "970460522785"
-        // };
+  <!--Custom work begins here-->
+  <script src="https://www.gstatic.com/firebasejs/5.5.0/firebase.js"></script>
+  <script>
+      // Initialize firestore
+      // var config = {
+      //     apiKey: "AIzaSyBWQTP95sySJKJlE6H4ReiXHJO9Zyekrhg",
+      //     authDomain: "web-collab-server.firebaseapp.com",
+      //     databaseURL: "https://web-collab-server.firebaseio.com",
+      //     projectId: "web-collab-server",
+      //     storageBucket: "web-collab-server.appspot.com",
+      //     messagingSenderId: "970460522785"
+      // };
 
-        // Initialize database
-        var config = {
-            apiKey: "AIzaSyBWQTP95sySJKJlE6H4ReiXHJO9Zyekrhg",
-            authDomain: "web-collab-server.firebaseapp.com",
-            databaseURL: "https://web-collab-server.firebaseio.com",
-            storageBucket: "web-collab-server.appspot.com"
-        };
+      // Initialize database
+      var config = {
+          apiKey: "AIzaSyBWQTP95sySJKJlE6H4ReiXHJO9Zyekrhg",
+          authDomain: "web-collab-server.firebaseapp.com",
+          databaseURL: "https://web-collab-server.firebaseio.com",
+          storageBucket: "web-collab-server.appspot.com"
+      };
 
-        firebase.initializeApp(config);
-    </script>
+      firebase.initializeApp(config);
+  </script>
 
-    <link rel="stylesheet" href="app.css">
-    <script type="text/javascript" src="app.js"></script>
-  </head>
-  <body onload="initialLoad()">
-    <div class="container">
-      <div class="login">
-        <label>User: </label><input id="user" type="text">
-        <label>Colour: </label><input id="colour" type="text">
-        <button id="submit" onclick="login()">Login</button>
-      </div>
-      <div class="wrapper">
-        <div class="buttons">
-          <button id="clear" class="button" onclick="removeBoard()">Clear</button>
-        </div>
-        <canvas id="chalkboard" height="700" width="700"
-                onmousedown="setTrace(true, event)" onmouseup="setTrace(false, event)" onmousemove="traceBoard(event)"></canvas>
-      </div>
+  <link rel="stylesheet" href="app.css">
+  <script type="text/javascript" src="app.js"></script>
+</head>
+<body onload="initialLoad()">
+  <div class="container">
+    <div class="login">
+      <label>User: </label><input id="user" type="text">
+      <label>Colour: </label><input id="colour" type="text">
+      <button id="submit" onclick="login()">Login</button>
     </div>
-  </body>
+    <div class="wrapper">
+      <div class="buttons">
+        <button id="clear" class="button" onclick="removeBoard()">Clear</button>
+      </div>
+      <canvas id="chalkboard" height="700" width="700"
+              onmousedown="setTrace(true, event)" onmouseup="setTrace(false, event)" onmousemove="traceBoard(event)"></canvas>
+    </div>
+  </div>
+</body>
 </html>

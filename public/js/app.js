@@ -1,5 +1,6 @@
 'use strict';
 
+
 const app = angular.module('web-collab-board', []);
 let scope;
 

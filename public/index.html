@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Web Collab</title>
+  <title>Web Collab Board</title>
 
   <!--&lt;!&ndash; update the version number as needed &ndash;&gt;-->
   <!--<script defer src="/__/firebase/5.5.0/firebase-app.js"></script>-->
@@ -39,23 +39,68 @@
       firebase.initializeApp(config);
   </script>
 
-  <link rel="stylesheet" href="app.css">
-  <script type="text/javascript" src="app.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js"
+          integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+          crossorigin="anonymous"></script>
+
+  <script type="text/javascript" src="js/api.js"></script>
 </head>
-<body onload="initialLoad()">
-  <div class="container">
-    <div class="login">
-      <label>User: </label><input id="user" type="text">
-      <label>Colour: </label><input id="colour" type="text">
-      <button id="submit" onclick="login()">Login</button>
-    </div>
-    <div class="wrapper">
-      <div class="buttons">
-        <button id="clear" class="button" onclick="removeBoard()">Clear</button>
+<body ng-app="web-collab-board"
+      ng-controller="controller"
+      onbeforeunload="sessionLeave()">
+  <div class="input-screen" ng-if="user === null">
+    <div class="input-controls">
+      <button class="submit-button"
+              ng-repeat="user in users"
+              ng-click="userLogin(user)"
+              ng-style="{'color': user.data.colour}">
+        {{ user.data.name }}
+      </button>
+      <div class="input-control">
+        <div>User:</div>
+        <input id="user-input">
       </div>
-      <canvas id="chalkboard" height="700" width="700"
-              onmousedown="setTrace(true, event)" onmouseup="setTrace(false, event)" onmousemove="traceBoard(event)"></canvas>
+      <div class="input-control">
+        <div>Colour:</div>
+        <input id="colour-input">
+      </div>
+      <button class="submit-button"
+              ng-click="userCreate()">
+        Create user
+      </button>
     </div>
   </div>
+  <div class="input-screen" ng-if="session === null">
+    <div class="input-controls">
+      <button class="submit-button"
+              ng-repeat="session in sessions"
+              ng-click="sessionJoin(session)">
+        {{ session.data.name }}
+      </button>
+      <div class="input-control">
+        <div>Board:</div>
+        <input id="session-input">
+      </div>
+      <button class="submit-button"
+              ng-click="sessionCreate()">
+        Create board
+      </button>
+    </div>
+  </div>
+  <div class="app-screen" ng-if="user !== null && session !== null">
+    <div class="board-wrapper">
+      <canvas id="board-canvas" height="600" width="600"
+              onmouseenter="enterCanvas()" onmouseleave="leaveCanvas()"
+              onmousedown="mouseDown()" onmouseup="mouseUp()"
+              onmousemove="mouseDrag(event)"></canvas>
+      <button class="clear-button" ng-click="clearChalk()">Clear</button>
+    </div>
+  </div>
+
+  <link rel="stylesheet" href="css/app.css">
+  <script type="text/javascript" src="js/app.js"></script>
+  <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 </body>
 </html>

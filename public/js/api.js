@@ -123,7 +123,7 @@ function deleteUser(ukey) {
 
 function createSession(data) {
     return new Promise(function (resolve, reject) {
-        const skey = _database.ref().child("sessions").push().key;
+        const skey = _database.ref(_akey).child("sessions").push().key;
         const refkey = `${_akey}/sessions/${skey}`;
         _database.ref(refkey).update({data: data}).then(
             function () {
@@ -331,8 +331,7 @@ function updateModel(mpath, data) {
 function getModel(mpath) {
     return new Promise(function (resolve, reject) {
         const refkey = `${_akey}/sessions/${_skey}/data${mpath}`;
-        const ref = _database.ref(refkey);
-        ref.on(
+        _database.ref(refkey).once(
             "value",
             function (snapshot) {
                 const data = snapshot.val();
@@ -415,7 +414,8 @@ function restoreVersion(vkey) {
 function listVersions() {
     return new Promise(function (resolve, reject) {
         const refkey = `${_akey}/sessions/${_skey}/versions`;
-        const ref = _database.ref(refkey).on(
+        const ref = _database.ref(refkey);
+        ref.on(
             "value",
             function (snapshot) {
                 const data = snapshot.val();
@@ -431,6 +431,7 @@ function listVersions() {
                 reject(null);
             }
         );
+        _subscriptions.push(ref);
     });
 }
 
@@ -614,8 +615,7 @@ function _openChannel(p, initiator) {
 
 function _handleMessage(message) {
     if (_handler) {
-        const data = _decodeObject(message.data);
-        _handler(data);
+        _handler(_decodeObject(message.data));
     }
 }
 

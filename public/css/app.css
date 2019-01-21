@@ -79,9 +79,43 @@ input {
     background-color: black;
 }
 
-.clear-button {
+.board-button {
     height: 30px;
     width: 200px;
     padding: 10px;
     margin: 10px auto;
+}
+
+.message-board {
+    display: flex;
+    flex-flow: column;
+    margin: 5px;
+    position: absolute;
+}
+
+.message-list {
+    height: 200px;
+    margin: 5px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+    border: 1px solid black;
+}
+
+.message-item {
+    margin: 2px;
+    word-wrap: normal;
+}
+
+.message-user {
+    font-weight: bold;
+}
+
+.message-text {
+    font-style: italic;
+}
+
+.message-input {
+    display: block;
+    margin: 5px;
+    clear: both;
 }

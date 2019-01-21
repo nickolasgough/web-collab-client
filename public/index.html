@@ -89,13 +89,29 @@
       </button>
     </div>
   </div>
-  <div class="app-screen" ng-if="user !== null && session !== null">
+  <div class="app-screen" ng-if="user !== null && session !== null"
+       onmousemove="mouseMove(event)">
+    <div class="message-board">
+      <div class="message-list">
+        <div class="message-item" ng-repeat="message in messages">
+          <span class="message-user">{{ message.user }}</span>
+            -
+          <span class="message-text">{{ message.text }}</span>
+        </div>
+      </div>
+      <textarea id="message-input" rows="10" cols="20"></textarea>
+      <div>
+        <button class="board-button" ng-click="resetMessages()">Reset</button>
+        <button class="board-button" ng-click="sendMessage()">Send</button>
+      </div>
+    </div>
     <div class="board-wrapper">
       <canvas id="board-canvas" height="600" width="600"
               onmouseenter="enterCanvas()" onmouseleave="leaveCanvas()"
               onmousedown="mouseDown()" onmouseup="mouseUp()"
               onmousemove="mouseDrag(event)"></canvas>
-      <button class="clear-button" ng-click="clearChalk()">Clear</button>
+      <button class="board-button" ng-click="clearChalk()">Clear</button>
+      <button class="board-button" ng-click="sessionLeave()">Leave</button>
     </div>
   </div>
 

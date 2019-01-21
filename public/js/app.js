@@ -11,11 +11,10 @@ app.controller('controller', function($scope) {
     $scope.sessions = null;
     $scope.version = null;
     $scope.versions = null;
-    $scope.cursors = {};
-    $scope.views = {};
     $scope.inCanvas = false;
     $scope.isDrawing = false;
     $scope.chalkLine = null;
+    $scope.messages = [];
     scope = $scope;
 
     initApi("board");
@@ -24,7 +23,9 @@ app.controller('controller', function($scope) {
         $scope.board = document.getElementById("board-canvas");
         $scope.context = $scope.board.getContext("2d");
 
+        $scope._handleMessage();
         $scope._listenChalk();
+        $scope._listenMessages();
     };
 
     listUsers().then(
@@ -55,6 +56,7 @@ app.controller('controller', function($scope) {
     $scope.applyUser = function (user) {
         $scope.user = user;
         $scope.$apply();
+
         listSessions().then(
             sessions => {
                 $scope.sessions = sessions;
@@ -102,6 +104,15 @@ app.controller('controller', function($scope) {
                 $scope.$apply();
             }
         );
+    };
+
+    $scope._transmitLeave = function (user) {
+        const message = {
+            action: "leave",
+            data: {user: user}
+        };
+
+        messageAll(message);
     };
 
     $scope.versionCreate = function () {
@@ -197,17 +208,17 @@ app.controller('controller', function($scope) {
     };
 
     $scope._uploadChalk = function (chalkLine) {
-        const ref = `/chalkboard/${chalkLine.key}`;
+        const refkey = `/chalkboard/${chalkLine.key}`;
         const data = {
             colour: chalkLine.colour,
             points: chalkLine.points
         };
-        updateModel(ref, data);
+        updateModel(refkey, data);
     };
 
     $scope._listenChalk = function () {
-        const ref = "/chalkboard";
-        listenModel(ref, function (data) {
+        const refkey = "/chalkboard";
+        listenModel(refkey, function (data) {
             $scope._clearBoard();
 
             for (let ckey in data) {
@@ -224,9 +235,95 @@ app.controller('controller', function($scope) {
         context.clearRect(0, 0, board.width, board.height);
     };
 
+    $scope.mouseMove = function (event) {
+        const user = $scope.user;
+        const mouse = {x: event.clientX, y: event.clientY};
+
+        $scope._transmitMouse(user, mouse);
+    };
+
+    $scope._transmitMouse = function (user, mouse) {
+        const message = {
+            action: "mouse",
+            data: {user: user, mouse: mouse}
+        };
+
+        messageAll(message);
+    };
+
+    $scope._handleMessage = function () {
+        messageHandler(function (message) {
+            const action = message.action;
+            const data = message.data;
+
+            if (action === "mouse") {
+                $scope._drawMouse(data.user, data.mouse);
+            } else if (action === "leave") {
+                $scope._removeMouse(data.user);
+            }
+        });
+    };
+
+    $scope._drawMouse = function (user, mouse) {
+        const cId = `${user.id}-cursor`;
+        let cursor = document.getElementById(cId);
+
+        if (cursor === null) {
+            cursor = document.createElement("div");
+            cursor.id = cId;
+            cursor.classList.add("cursor");
+            cursor.style.backgroundColor = user.data.colour;
+            document.body.appendChild(cursor);
+        }
+
+        cursor.style.left = `${mouse.x}px`;
+        cursor.style.top = `${mouse.y}px`;
+    };
+
+    $scope._removeMouse = function (user) {
+        const cId = `${user.id}-cursor`;
+        let cursor = document.getElementById(cId);
+
+        if (cursor !== null) {
+            document.body.removeChild(cursor);
+        }
+    };
+
+    $scope.sendMessage = function () {
+        const user = $scope.user;
+        const mInput = $("#message-input");
+
+        const message = {
+            user: user.data.name,
+            colour: user.data.colour,
+            text: mInput.val()
+        };
+        mInput.val("");
+
+        const refkey = "/messages";
+        const mkey = createKey(refkey);
+        updateModel(`${refkey}/${mkey}`, message);
+    };
+
+    $scope._listenMessages = function () {
+        const refkey = "/messages";
+        listenModel(refkey, function (data){
+            const messages = [];
+            for (let mkey in data) {
+                let message = data[mkey];
+                messages.push(message);
+            }
+
+            $scope.messages = messages;
+        });
+    };
 
     $scope.$on("destroy", $scope.sessionLeave);
 });
+
+function sessionLeave () {
+    scope.sessionLeave();
+}
 
 function enterCanvas() {
     scope.enterCanvas();
@@ -246,4 +343,8 @@ function mouseUp() {
 
 function mouseDrag(event) {
     scope.mouseDrag(event);
+}
+
+function mouseMove(event) {
+    scope.mouseMove(event);
 }

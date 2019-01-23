@@ -57,12 +57,7 @@ app.controller('controller', function($scope) {
         $scope.user = user;
         $scope.$apply();
 
-        listSessions().then(
-            sessions => {
-                $scope.sessions = sessions;
-                $scope.$apply();
-            }
-        );
+        $scope.sessionList();
     };
 
     $scope.sessionCreate = function () {
@@ -70,7 +65,11 @@ app.controller('controller', function($scope) {
 
         createSession({name: sessionInput.val()}).then(
             session => {
-                $scope.applySession(session);
+                joinSession(session.id).then(
+                    () => {
+                        $scope.applySession(session);
+                    }
+                );
             }
         );
     };
@@ -91,6 +90,15 @@ app.controller('controller', function($scope) {
         $scope.versionsList();
     };
 
+    $scope.sessionList = function () {
+        listSessions().then(
+            sessions => {
+                $scope.sessions = sessions;
+                $scope.$apply();
+            }
+        );
+    };
+
     $scope.sessionLeave = function () {
         const cursors = document.getElementsByClassName("cursor");
         for (let cursor of cursors) {
@@ -102,6 +110,8 @@ app.controller('controller', function($scope) {
             () => {
                 $scope.session = null;
                 $scope.$apply();
+
+                $scope.sessionList();
             }
         );
     };
